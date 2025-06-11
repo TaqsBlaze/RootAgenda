@@ -3,57 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meeting AI - Agenda & Summary</title>
+    <title>RootAgenda - AI Meeting Assistant</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS to match the existing app's aesthetic and add animations */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* Deep dark blue gradient */
+            color: #e2e8f0; /* Light gray for general text */
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+        }
+
+        /* Reusing button primary styles from existing app */
+        .button-primary {
+            background: linear-gradient(90deg, #6b46c1 0%, #8b5cf6 100%); /* Gradient for primary action */
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s ease-in-out;
+        }
+        .button-primary:hover {
+            background: linear-gradient(90deg, #8b5cf6 0%, #6b46c1 100%);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.6);
+        }
+
+        /* Hero Image Zoom/Pan Animation */
+        @keyframes imageZoomPan {
+            0%, 100% {
+                transform: scale(1) translateX(0);
+            }
+            50% {
+                transform: scale(1.03) translateX(10px); /* Slightly zoom and pan right */
+            }
+        }
+
+        .hero-image-animation {
+            animation: imageZoomPan 20s ease-in-out infinite alternate;
+        }
+
+        /* Hero Tint Overlay Pulsate Animation */
+        @keyframes tintPulsate {
+            0%, 100% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 0.5; /* Slightly increase opacity */
+            }
+        }
+
+        .hero-tint-animation {
+            animation: tintPulsate 15s ease-in-out infinite;
+        }
+
+        /* Fade-in animation for elements */
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Delay for sequential animations */
+        .fade-in-up-1 { animation-delay: 0.2s; }
+        .fade-in-up-2 { animation-delay: 0.4s; }
+        .fade-in-up-3 { animation-delay: 0.6s; }
+        .fade-in-up-4 { animation-delay: 0.8s; }
+
+        /* Animation for feature cards */
+        .scale-in {
+            animation: scaleIn 0.5s ease-out forwards;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        @keyframes scaleIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .scale-in-1 { animation-delay: 1.0s; }
+        .scale-in-2 { animation-delay: 1.2s; }
+
+        /* Icon styling */
+        .icon-svg {
+            width: 3rem; /* equivalent to w-12 */
+            height: 3rem; /* equivalent to h-12 */
+            color: #8b5cf6; /* violet-500 */
+        }
+    </style>
+     <!-- Open Graph / Facebook -->
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://taqsblaze.github.io/RootAgenda">
+     <meta property="og:title" content="RootAgenda - AI Meeting Assistant">
+     <meta property="og:site_name" content="RootAgenda AI">
+     <meta property="og:description" content="Transform your meetings with RootAgenda AI, your intelligent meeting assistant. Generate agendas and summarize notes effortlessly.">
+     <meta property="og:locale" content="en_US">
+     <meta property="og:image" content="https://taqsblaze.github.io/RootAgenda/image/preview.png">
+     <meta property="og:image:width" content="1200">
+     <meta property="og:image:height" content="550">
+     
+     <!-- Twitter -->
+     <meta property="twitter:card" content="summary_large_image">
+     <meta property="twitter:url" content="https://taqsblaze.github.io/RootAgenda">
+     <meta property="twitter:title" content="RootAgenda - AI Meeting Assistant">
+     <meta property="twitter:description" content="Transform your meetings with RootAgenda AI, your intelligent meeting assistant. Generate agendas and summarize notes effortlessly.">
+     <meta property="twitter:image" content="https://taqsblaze.github.io/RootAgenda/image/preview.png">
+     
+     <!-- Additional SEO meta tags -->
+     <meta name="description" content="RootAgenda AI is your intelligent meeting assistant, designed to streamline your workflows from agenda generation to insightful summaries.">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta name="keywords" content="AI, meeting assistant, agenda generation, notes summarization, productivity, workflow automation, RootAgenda">
+     <meta name="author" content="Tanaka Chinengundu">
+     <link rel="canonical" href="https://taqsblaze.github.io/RootAgenda">
+     
 </head>
-<body class="bg-gray-100 min-h-screen font-sans">
-    <header class="bg-indigo-700 text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold">RootAgenda</h1>
-            <p class="text-sm opacity-80"> AI powered Agenda & Summary Generator</p>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-gray-900 text-white p-6 shadow-xl border-b border-gray-800">
+        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
+            <a href="#" class="text-4xl font-bold text-indigo-400 mb-2 sm:mb-0 tracking-wide hover:text-indigo-300 transition-colors duration-300">
+                RootAgenda <span class="text-base font-normal text-gray-500">AI</span>
+            </a>
+            <nav>
+                <ul class="flex space-x-6 text-lg">
+                    <li><a href="#features" class="text-gray-300 hover:text-white transition-colors duration-300 rounded-md py-2 px-3">Features</a></li>
+                    <li><a href="agenda/" class="text-gray-300 hover:text-white transition-colors duration-300 rounded-md py-2 px-3">Get Started</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <main class="container mx-auto p-4 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <section class="bg-white p-6 rounded-lg shadow-lg">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Generate Meeting Agenda</h2>
-                <div class="mb-4">
-                    <label for="meetingTopic" class="block text-sm font-medium text-gray-700 mb-1">Meeting Topic:</label>
-                    <input type="text" id="meetingTopic" class="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Q3 Marketing Strategy">
-                </div>
-                <div class="mb-6">
-                    <label for="desiredOutcomes" class="block text-sm font-medium text-gray-700 mb-1">Desired Outcomes (comma-separated):</label>
-                    <input type="text" id="desiredOutcomes" class="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Decide on budget, Assign tasks, Plan next steps">
-                </div>
-                <button id="generateAgendaBtn" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition-colors">Generate Agenda</button>
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="relative h-screen flex items-center justify-center text-center overflow-hidden py-20 px-4">
+            <!-- Background Image -->
+            <img src="image/hero2.png"
+                 onerror="this.src='https://placehold.co/1920x1080/1a2233/e2e8f0?text=Placeholder+Image'"
+                 alt="AI meeting background"
+                 class="absolute inset-0 w-full h-full object-cover z-0 hero-image-animation">
 
-                <div class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-md">
-                    <h3 class="text-lg font-medium text-gray-800 mb-2">Generated Agenda:</h3>
-                    <div id="generatedAgenda" class="prose prose-sm max-w-none text-gray-700">
-                        <p class="text-gray-500">Your agenda will appear here.</p>
+            <!-- Tint Overlay (Violet tint) -->
+            <div class="absolute inset-0 bg-violet-900 opacity-90 z-10 hero-tint-animation"></div>
+
+            <!-- Content for Hero Section -->
+            <div class="relative z-30 max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 fade-in-up">
+                    Transform Your Meetings with <span class="text-violet-400">AI</span> Power
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-10 fade-in-up fade-in-up-1">
+                    RootAgenda AI is your intelligent meeting assistant, designed to streamline your workflows from agenda generation to insightful summaries.
+                </p>
+                <a href="agenda/" class="button-primary inline-block text-white px-10 py-4 rounded-lg font-semibold text-xl md:text-2xl tracking-wide shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-violet-500 focus:ring-opacity-50 fade-in-up fade-in-up-2">
+                    Discover Features
+                </a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 px-4 bg-gray-800 border-t border-gray-700">
+            <div class="container mx-auto text-center">
+                <h2 class="text-4xl md:text-5xl font-bold text-violet-300 mb-12 fade-in-up fade-in-up-3">
+                    Key Features
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+                    <!-- Feature Card 1: Agenda Generation -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 flex flex-col items-center text-center scale-in scale-in-1">
+                        <div class="mb-6">
+                            <!-- SVG Icon for Agenda -->
+                            <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-3xl font-semibold text-white mb-4">AI Agenda Generation</h3>
+                        <p class="text-gray-400 text-lg leading-relaxed">
+                            Effortlessly create structured meeting agendas based on your topic and desired outcomes. Let AI handle the heavy lifting, so you can focus on productive discussions.
+                        </p>
+                    </div>
+
+                    <!-- Feature Card 2: Notes Summarization -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 flex flex-col items-center text-center scale-in scale-in-2">
+                        <div class="mb-6">
+                            <!-- SVG Icon for Summary -->
+                            <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.747 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-3xl font-semibold text-white mb-4">Intelligent Notes Summarization</h3>
+                        <p class="text-gray-400 text-lg leading-relaxed">
+                            Paste your raw meeting notes and get concise, actionable summaries in seconds. Never miss key decisions or action items again.
+                        </p>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section class="bg-white p-6 rounded-lg shadow-lg">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Summarize Meeting Notes</h2>
-                <div class="mb-4">
-                    <label for="meetingNotes" class="block text-sm font-medium text-gray-700 mb-1">Paste Meeting Notes:</label>
-                    <textarea id="meetingNotes" rows="8" class="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., John said... Sarah decided... We need to..."></textarea>
-                </div>
-                <button id="summarizeNotesBtn" class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition-colors">Summarize Notes</button>
-
-                <div class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-md">
-                    <h3 class="text-lg font-medium text-gray-800 mb-2">Generated Summary:</h3>
-                    <div id="generatedSummary" class="prose prose-sm max-w-none text-gray-700">
-                        <p class="text-gray-500">Your summary will appear here.</p>
-                    </div>
-                </div>
-            </section>
-        </div>
+        <!-- Call to Action Section -->
+        <section id="cta" class="py-20 px-4 bg-gradient-to-r from-violet-700 to-indigo-700 text-white text-center">
+            <div class="container mx-auto max-w-3xl">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 fade-in-up fade-in-up-4">
+                    Ready to Revolutionize Your Meetings?
+                </h2>
+                <p class="text-xl md:text-2xl mb-10 opacity-90 fade-in-up fade-in-up-4">
+                    Join countless professionals who are already boosting their productivity with RootAgenda AI.
+                </p>
+                <a href="agenda/" class="bg-white text-violet-700 hover:bg-gray-100 px-10 py-5 rounded-lg font-bold text-xl md:text-2xl shadow-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 fade-in-up fade-in-up-4">
+                    Try RootAgenda AI Now!
+                </a>
+            </div>
+        </section>
     </main>
 
-    <script src="app.min.js" type="module"></script>
+    <!-- Footer Section -->
+    <footer class="bg-gray-900 text-gray-500 p-6 text-center text-sm shadow-inner mt-10">
+        <p>&copy; <span id="currentYear"></span> RootAgenda AI. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Optional: Intersection Observer for fade-in animations on scroll
+        // This makes elements animate as they come into view, not just on page load.
+        const faders = document.querySelectorAll('.fade-in-up, .scale-in');
+
+        const appearOptions = {
+            threshold: 0.1, // Element is 10% in view
+            rootMargin: "0px 0px -50px 0px" // Adjusts when the observer triggers
+        };
+
+        const appearOnScroll = new IntersectionObserver(function(
+            entries,
+            appearOnScroll
+        ) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    // Apply animation styles directly or add class that applies them
+                    if (entry.target.classList.contains('fade-in-up')) {
+                        entry.target.style.animationName = 'fadeInUp';
+                    } else if (entry.target.classList.contains('scale-in')) {
+                        entry.target.style.animationName = 'scaleIn';
+                    }
+                    appearOnScroll.unobserve(entry.target);
+                }
+            });
+        }, appearOptions);
+
+        faders.forEach(fader => {
+            fader.style.opacity = '0'; // Hide elements initially for observer to work
+            fader.style.transform = fader.classList.contains('fade-in-up') ? 'translateY(20px)' : 'scale(0.9)';
+            fader.style.animationFillMode = 'forwards'; // Keep the end state of animation
+            fader.style.transition = 'none'; // Disable default transitions
+            appearOnScroll.observe(fader);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+    </script>
 </body>
 </html>
