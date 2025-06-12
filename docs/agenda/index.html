@@ -98,6 +98,56 @@
         .token-display .icon {
             color: #8b5cf6; /* Violet icon color */
         }
+        .print-button {
+            background-color: #4a5568; /* Dark gray for print button */
+            color: #cbd5e0;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+        .print-button:hover {
+            background-color: #64748b; /* Lighter gray on hover */
+            transform: translateY(-1px);
+        }
+        .print-button svg {
+            width: 1.25rem; /* w-5 */
+            height: 1.25rem; /* h-5 */
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printableArea, #printableArea * {
+                visibility: visible;
+            }
+            #printableArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 1in; /* Add some padding for print output */
+                box-sizing: border-box;
+                color: black; /* Ensure text is black for printing */
+                background-color: white; /* Ensure background is white for printing */
+            }
+            /* Adjustments for print layout */
+            #printableArea .prose-invert {
+                color: black !important;
+            }
+            #printableArea h3, #printableArea h4, #printableArea p, #printableArea li {
+                color: black !important;
+            }
+            /* Hide print button itself when printing */
+            #printableArea .print-button {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -109,27 +159,21 @@
     </header>
 
     <main class="container mx-auto p-4 py-10 flex-grow">
-        <!-- Token Display Section at the Top -->
         <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
             <div id="agendaTokensDisplay" class="token-display">
-                <!-- Icon for Agenda Tokens -->
                 <svg class="icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                 </svg>
                 Agenda Tokens: <span class="font-bold text-violet-400">--</span>
             </div>
             <div id="summaryTokensDisplay" class="token-display">
-                <!-- Icon for Summary Tokens -->
                 <svg class="icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.747 0-3.332.477-4.5 1.253"></path>
                 </svg>
                 Summary Tokens: <span class="font-bold text-violet-400">--</span>
             </div>
         </div>
-        <!-- End Token Display Section -->
-
         <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-700">
-            <!-- Tabs Navigation -->
             <div class="flex bg-gray-900 border-b border-gray-700">
                 <button id="tabAgendaBtn" class="tab-button flex-1 py-4 px-6 text-center text-xl font-medium text-gray-300 hover:text-white" onclick="openTab('agenda')">
                     Generate Agenda
@@ -139,7 +183,6 @@
                 </button>
             </div>
 
-            <!-- Tab Content -->
             <div id="tabAgenda" class="tab-content active">
                 <section class="p-4 sm:p-6">
                     <h2 class="text-3xl font-semibold text-violet-300 mb-8 text-center">Generate Meeting Agenda</h2>
@@ -156,6 +199,14 @@
                     </button>
 
                     <div class="mt-10 p-6 rounded-lg output-card">
+                        <div class="flex justify-end mb-4">
+                            <button id="printAgendaBtn" class="print-button hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="P9 6v-3H5m.001 18H5m14-4v4m-6-4h4m-6 0h.01M9 13v6a2 2 0 002 2h8a2 2 0 002-2v-6m-6-6h-4l-3-6H9m16 9v2a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2h1.5a2 2 0 001.6-.8l2.3-3.2A2 2 0 018.6 2h6.8a2 2 0 011.6.8l2.3 3.2c.5.8.6 1.8.3 2.8-.2.8-.8 1.4-1.6 1.4H21a2 2 0 01-2 2z" />
+                                </svg>
+                                Print
+                            </button>
+                        </div>
                         <h3 class="text-2xl font-medium text-violet-300 mb-4">Generated Agenda:</h3>
                         <div id="generatedAgenda" class="prose prose-invert max-w-none text-gray-300 leading-relaxed">
                             <p class="text-gray-400 italic">Your meeting agenda will appear here.</p>
@@ -176,6 +227,14 @@
                     </button>
 
                     <div class="mt-10 p-6 rounded-lg output-card">
+                        <div class="flex justify-end mb-4">
+                            <button id="printSummaryBtn" class="print-button hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="P9 6v-3H5m.001 18H5m14-4v4m-6-4h4m-6 0h.01M9 13v6a2 2 0 002 2h8a2 2 0 002-2v-6m-6-6h-4l-3-6H9m16 9v2a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2h1.5a2 2 0 001.6-.8l2.3-3.2A2 2 0 018.6 2h6.8a2 2 0 011.6.8l2.3 3.2c.5.8.6 1.8.3 2.8-.2.8-.8 1.4-1.6 1.4H21a2 2 0 01-2 2z" />
+                                </svg>
+                                Print
+                            </button>
+                        </div>
                         <h3 class="text-2xl font-medium text-violet-300 mb-4">Generated Summary:</h3>
                         <div id="generatedSummary" class="prose prose-invert max-w-none text-gray-300 leading-relaxed">
                             <p class="text-gray-400 italic">Your meeting summary will appear here.</p>
@@ -190,6 +249,6 @@
         <p>&copy; <span id="currentYear"></span> RootAgenda AI. All rights reserved.</p>
     </footer>
 
-    <script src="app.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
